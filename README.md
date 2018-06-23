@@ -60,6 +60,7 @@
     PRIMARY KEY (`user_id`)
   ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1000001 ;
   ```
+  
     * To resolve this:
       * Remove all occurrences of `ENGINE=MyISAM`
       * Delete the existing database
