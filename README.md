@@ -60,12 +60,13 @@
     PRIMARY KEY (`user_id`)
   ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1000001 ;
   ```
-  
-    * To resolve this:
-      * Remove all occurrences of `ENGINE=MyISAM`
-      * Delete the existing database
-      * Re-create the database
-      * Try to import again...
+
+  * To resolve this:
+    * Remove all occurrences of `ENGINE=MyISAM`
+    * Delete the existing database
+    * Re-create the database
+    * Try to import again...
+
 3. Does any of your SQL statements have multiple `INSERT INTO` statements that can be flattened out?
 Example:
 ```
