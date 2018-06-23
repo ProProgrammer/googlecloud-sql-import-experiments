@@ -1,12 +1,12 @@
 #### Setting Google Cloud Storage Bucket and File permissions.
 * Google Cloud SQL requires you to set writer permissions on the bucket that contains your database dump file.
-```
-gsutil acl ch -u <service_account_associated_with_sql_instance>:W gs://<bucket_name>
-```
-Example:
-```
-gsutil acl ch -u adnrtynbqzayvhpovum46waf64@speckle-umbrella-38.iam.gserviceaccount.com:W gs://bucket-22062018-104711
-```
+  ```
+  gsutil acl ch -u <service_account_associated_with_sql_instance>:W gs://<bucket_name>
+  ```
+  Example:
+  ```
+  gsutil acl ch -u adnrtynbqzayvhpovum46waf64@speckle-umbrella-38.iam.gserviceaccount.com:W gs://bucket-22062018-104711
+  ```
   * In above example:
     ```
     * service_account_associated_with_sql_instance = adnrtynbqzayvhpovum46waf64@speckle-umbrella-38.iam.gserviceaccount.com
@@ -14,13 +14,13 @@ gsutil acl ch -u adnrtynbqzayvhpovum46waf64@speckle-umbrella-38.iam.gserviceacco
     ```
 
 * Google Cloud requires you to set reader permissions on the dump file that you are going to use to import data into your database
-```
-gsutil acl ch -u <service_account_associated_with_sql_instance>:R gs://<bucket_name>/<file_name_with_extension>
-```
-Example
-```
-gsutil acl ch -u adnrtynbqzayvhpovum46waf64@speckle-umbrella-38.iam.gserviceaccount.com:R gs://bucket-22062018-104711/Sample-SQL-File-10-Rows.sql.gz
-```
+  ```
+  gsutil acl ch -u <service_account_associated_with_sql_instance>:R gs://<bucket_name>/<file_name_with_extension>
+  ```
+  Example
+  ```
+  gsutil acl ch -u adnrtynbqzayvhpovum46waf64@speckle-umbrella-38.iam.gserviceaccount.com:R gs://bucket-22062018-104711/Sample-SQL-File-10-Rows.sql.gz
+  ```
   * In the above example:
     ```
     * service_account_associated_with_sql_instance = adnrtynbqzayvhpovum46waf64@speckle-umbrella-38.iam.gserviceaccount.com
@@ -30,41 +30,41 @@ gsutil acl ch -u adnrtynbqzayvhpovum46waf64@speckle-umbrella-38.iam.gserviceacco
 
 #### Import .gz file
 * `gcloud sql` utility allows you to directly import .gz files as shown below:
-```
-gcloud sql import sql <instance_name> gs://<bucket_name>/<file_name_with_extension> -d <database_name>
-```
-Example:
-```
-gcloud sql import sql sqlinstance-22062018-10572 gs://bucket-22062018-104711/Sample-SQL-File-10-Rows.sql.gz -d sample_db
-```
-In the above example:
-  * `instance_name` = `sqlinstance-22062018-10572`
-  * `bucket_name` = `bucket-22062018-104711`
-  * `file_name_with_extension` = `Sample-SQL-File-10-Rows.sql.gz`
-  * `database_name` = `sample_db`
+  ```
+  gcloud sql import sql <instance_name> gs://<bucket_name>/<file_name_with_extension> -d <database_name>
+  ```
+  Example:
+  ```
+  gcloud sql import sql sqlinstance-22062018-10572 gs://bucket-22062018-104711/Sample-SQL-File-10-Rows.sql.gz -d sample_db
+  ```
+  In the above example:
+    * `instance_name` = `sqlinstance-22062018-10572`
+    * `bucket_name` = `bucket-22062018-104711`
+    * `file_name_with_extension` = `Sample-SQL-File-10-Rows.sql.gz`
+    * `database_name` = `sample_db`
 
 #### Errors
 ##### `ERROR: (gcloud.sql.import.sql) ERROR_RDBMS`
 1. Are you trying to import a file that doesn't have correct permissions set as described in permissions section above?
 2. Does any of your SQL statements have `ENGINE=MyISAM`
-Example:
-```
-CREATE TABLE IF NOT EXISTS `user_details` (
-  `user_id` int(11) NOT NULL AUTO_INCREMENT,
-  `username` varchar(255) DEFAULT NULL,
-  `first_name` varchar(50) DEFAULT NULL,
-  `last_name` varchar(50) DEFAULT NULL,
-  `gender` varchar(10) DEFAULT NULL,
-  `password` varchar(50) DEFAULT NULL,
-  `status` tinyint(10) DEFAULT NULL,
-  PRIMARY KEY (`user_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1000001 ;
-```
-  * To resolve this:
-    * Remove all occurrences of `ENGINE=MyISAM`
-    * Delete the existing database
-    * Re-create the database
-    * Try to import again...
+  Example:
+  ```
+  CREATE TABLE IF NOT EXISTS `user_details` (
+    `user_id` int(11) NOT NULL AUTO_INCREMENT,
+    `username` varchar(255) DEFAULT NULL,
+    `first_name` varchar(50) DEFAULT NULL,
+    `last_name` varchar(50) DEFAULT NULL,
+    `gender` varchar(10) DEFAULT NULL,
+    `password` varchar(50) DEFAULT NULL,
+    `status` tinyint(10) DEFAULT NULL,
+    PRIMARY KEY (`user_id`)
+  ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1000001 ;
+  ```
+    * To resolve this:
+      * Remove all occurrences of `ENGINE=MyISAM`
+      * Delete the existing database
+      * Re-create the database
+      * Try to import again...
 3. Does any of your SQL statements have multiple `INSERT INTO` statements that can be flattened out?
 Example:
 ```
